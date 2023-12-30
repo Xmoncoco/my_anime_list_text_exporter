@@ -1,12 +1,12 @@
 {
 	"id": "my_anime_list_text_exporter",
-	"name": "anime to obsidian",
+	"name": "my anime list text exporter",
 	"version": "1.0.0",
 	"minAppVersion": "0.15.0",
 	"description": "add anime data in obsidian",
 	"author": "XmoncocoX",
 	"authorUrl": "https://www.github.com/Xmoncoco",
-	"fundingUrl": "https://obsidian.md/pricing",
+	"fundingUrl": "https://paypal.me/MilhanHadjadji?country.x=FR&locale.x=en_US",
 	"isDesktopOnly": false
 }
 
