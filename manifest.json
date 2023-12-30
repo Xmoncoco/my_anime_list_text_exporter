@@ -1,0 +1,11 @@
+{
+	"id": "anime_to_obsidian",
+	"name": "anime to obsidian",
+	"version": "1.0.0",
+	"minAppVersion": "0.15.0",
+	"description": "add anime data in obsidian",
+	"author": "XmoncocoX",
+	"authorUrl": "https://www.github.com/Xmoncoco",
+	"fundingUrl": "https://obsidian.md/pricing",
+	"isDesktopOnly": false
+}
