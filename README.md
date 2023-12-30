@@ -1,2 +1,2 @@
-# my_anime_list_to_
+# my anime list to obsidian
 a plugin who createa page
