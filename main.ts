@@ -8,12 +8,16 @@ bonjour note de xmoncocox je suis un étudiant français mais j'ai codé avec le
 */
 
 import axios from 'axios';
-import { Plugin, Modal, TFile, Notice } from 'obsidian';
+import { Plugin, Modal, TFile, TFolder, Notice } from 'obsidian';
+import {MyPluginSettings, DEFAULT_SETTINGS, animeToObsidianSettingsTab} from './settings';
+
 
 //temporaire pour avoir une configuration de tag suplémentaire
 let aditionaltags = {
 	tags :["anime", "culture"],
-}
+};
+
+// Créer une classe pour la modal
 class TextPromptModal extends Modal {
     text: string = '';
     resolver: (value: string) => void;
@@ -54,8 +58,8 @@ class TextPromptModal extends Modal {
             this.resolver = resolve;
         });
     }
-}
- 
+};
+
 class animeText{
 	constructor(){
 
@@ -64,16 +68,17 @@ class animeText{
 	createText(animeData: JSON, animeName: string, aditionaltags: JSON){
 		let text = "";
 		text += "---\n" + this.createTags(animeData,animeName, aditionaltags)+ "---\n";
+        text += `# description: \n ${animeData.synopsis}\n`;
 
 		return text;
 	}
 
 	createTags(data : JSON ,animeName: string, aditionaltags: JSON){
 		let tags ="tags:\n";
-		tags += `  - ${animeName.replace(" ","_")}\n`;
+		tags += `  - ${spaceremover(animeName)}\n`;
 		aditionaltags.tags.forEach(element => {
 			// voir si il y a un espace dans le tag et le remplacer par un underscore
-			element = element.replace(" ", "_");
+			element = spaceremover(element);
 			console.log(element);
 			tags += `  - ${element}\n`;
 		});
@@ -93,9 +98,13 @@ class animeText{
 	}
 	
 
-}
-export default class EmptyPlugin extends Plugin {
+};
+export default class animeToObsidian extends Plugin {
+    settings: MyPluginSettings | unknown;
+
     async onload() {
+        
+        await this.loadSettings();
         this.addCommand({
             id: 'submit-anime',
             name: 'add a page for an anime',
@@ -110,30 +119,39 @@ export default class EmptyPlugin extends Plugin {
                 console.log(value);
 				if(value != ""){
 					// Créer un nouveau fichier Markdown avec le titre comme nom de fichier
-					let filePath = value + '.md';
-					let file = await this.app.vault.create(filePath, '');
+                    let filePath = (this.settings as MyPluginSettings).basePath + "/" + value + '.md';
+                    let file = await this.app.vault.create(filePath, '');
 
-					// Créer un nouvel onglet et ouvrir le fichier dans cet onglet
-					let leaf = this.app.workspace.activeLeaf;
-					await leaf.openFile(file);
+                    // Créer un nouvel onglet et ouvrir le fichier dans cet onglet
+                    let leaf = this.app.workspace.activeLeaf;
+                    await leaf.openFile(file);
 
-					// Obtenir l'éditeur du fichier actuellement ouvert
-					let editor = leaf.view.sourceMode.cmEditor;
+                    // Obtenir l'éditeur du fichier actuellement ouvert
+                    let editor = leaf.view.sourceMode.cmEditor;
 
-					// Remplacer le texte de l'éditeur
-					let text = new animeText();
-					console.log(text.createText(await getAnimeData(value), value, aditionaltags));
-					editor.setValue(text.createText(await getAnimeData(value), value, aditionaltags));
+                    // Remplacer le texte de l'éditeur
+                    let text = new animeText();
+                    console.log(text.createText(await getAnimeData(value), value, aditionaltags));
+                    editor.setValue(text.createText(await getAnimeData(value), value, aditionaltags));
 				} else {
 					new Notice("did you type nothing ? (error : variable is empty)");
 				}
 
             },
         });
+        this.addSettingTab(new animeToObsidianSettingsTab(this.app, this));
     }
 
     async onunload() {
         // Code à exécuter lorsque l'extension est déchargée
+    }
+
+    async loadSettings() {
+        this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
+    }
+    
+    async saveSettings() {
+        await this.saveData(this.settings);
     }
 }
 
@@ -153,4 +171,16 @@ async function getAnimeData(animeName: string) {
     } catch (error) {
         console.error(`Failed to fetch anime data: ${error.message}`);
     }
+}
+
+function spaceremover(text: string){
+    let newtext = "";
+    for (let i = 0; i < text.length; i++) {
+        if(text[i] == " "){
+            newtext += "_";
+        } else {
+            newtext += text[i];
+        }
+    }
+    return newtext;
 }
