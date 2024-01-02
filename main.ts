@@ -7,8 +7,7 @@ hello note from xmoncocox I'm a french student and is why my english is bad and 
 bonjour note de xmoncocox je suis un étudiant français mais j'ai codé avec les élément de l'ui en anglais mais les commentaires sont en français. vous pouvez passer le code dans un traducteur si vous voulez (mais en vrai si vous êtes la c'est que vous savez déjà parler anglais)
 */
 
-import axios from 'axios';
-import { Plugin, Modal, TFile, TFolder, Notice } from 'obsidian';
+import { Plugin, Modal, TFile, TFolder, Notice, requestUrl, RequestUrlParam } from 'obsidian';
 import {MyPluginSettings, DEFAULT_SETTINGS, animeToObsidianSettingsTab} from './settings';
 
 
@@ -156,22 +155,7 @@ export default class animeToObsidian extends Plugin {
 }
 
 
-async function getAnimeData(animeName: string) {
-    const url = `https://api.jikan.moe/v4/anime?q=${animeName}&limit=1`;
 
-    try {
-        const response = await axios.get(url);
-
-        if (response.status !== 200) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        console.log(response.data.data[0]);
-        return response.data.data[0];
-    } catch (error) {
-        console.error(`Failed to fetch anime data: ${error.message}`);
-    }
-}
 
 function spaceremover(text: string){
     let newtext = "";
@@ -183,4 +167,25 @@ function spaceremover(text: string){
         }
     }
     return newtext;
+}
+
+async function getAnimeData(animeName: string) {
+    const request: RequestUrlParam = {
+        url: `https://api.jikan.moe/v4/anime?q=${animeName}&limit=1`,
+        method: 'GET',
+    };
+
+    try {
+        const response = await requestUrl(request);
+
+        if (response.status !== 200) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        console.log(response.json.data);
+        return response.json.data[0];
+    } catch (error) {
+        console.error(`Failed to fetch anime data: ${error.message}`);
+    }
+    
 }
