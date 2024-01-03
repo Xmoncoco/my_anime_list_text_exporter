@@ -8,7 +8,7 @@ bonjour note de xmoncocox je suis un étudiant français mais j'ai codé avec le
 */
 
 import { Plugin, Modal, TFile, TFolder, Notice, requestUrl, RequestUrlParam } from 'obsidian';
-import {MyPluginSettings, DEFAULT_SETTINGS, animeToObsidianSettingsTab} from './settings';
+import {animeToObsidianSettings, DEFAULT_SETTINGS, animeToObsidianSettingsTab} from './settings';
 
 
 //temporaire pour avoir une configuration de tag suplémentaire
@@ -99,7 +99,7 @@ class animeText{
 
 };
 export default class animeToObsidian extends Plugin {
-    settings: MyPluginSettings | unknown;
+    settings: animeToObsidianSettings | unknown;
 
     async onload() {
         
@@ -118,7 +118,7 @@ export default class animeToObsidian extends Plugin {
                 console.log(value);
 				if(value != ""){
 					// Créer un nouveau fichier Markdown avec le titre comme nom de fichier
-                    let filePath = (this.settings as MyPluginSettings).basePath + "/" + value + '.md';
+                    let filePath = (this.settings as animeToObsidianSettings).basePath + "/" + value + '.md';
                     let file = await this.app.vault.create(filePath, '');
 
                     // Créer un nouvel onglet et ouvrir le fichier dans cet onglet

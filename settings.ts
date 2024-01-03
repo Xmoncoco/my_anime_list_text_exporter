@@ -2,11 +2,11 @@ import { App, PluginSettingTab, Setting } from 'obsidian';
 import animeToObsidian from './main';
 import {ls} from './filefinder'
 
-export interface MyPluginSettings {
+export interface animeToObsidianSettings {
     basePath: string;
 }
   
-export const DEFAULT_SETTINGS: MyPluginSettings = {
+export const DEFAULT_SETTINGS: animeToObsidianSettings = {
     basePath: ''
 }
 
