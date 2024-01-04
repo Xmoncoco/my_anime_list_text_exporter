@@ -9,10 +9,12 @@ This plugin creates a page in Obsidian from your anime list.
     - [x] add a path to the anime list
     - [ ] chose tags to add
     - [ ] create a custom template
+    - [ ] check list setting 
 - [x] add tags to each page with the data
 - [x] add a synosis to each page
 - [ ] add a link to the anime page
 - [ ] add character to the page
+- [ ] add a way to put animes in a check list 
 
 ## build
 
