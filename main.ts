@@ -7,7 +7,7 @@ hello note from xmoncocox I'm a french student and is why my english is bad and 
 bonjour note de xmoncocox je suis un étudiant français mais j'ai codé avec les élément de l'ui en anglais mais les commentaires sont en français. vous pouvez passer le code dans un traducteur si vous voulez (mais en vrai si vous êtes la c'est que vous savez déjà parler anglais)
 */
 
-import { Plugin, Modal, TFile, TFolder, Notice, requestUrl, RequestUrlParam } from 'obsidian';
+import { Plugin, Modal, TFile, TFolder, Notice, requestUrl, RequestUrlParam, MarkdownView } from 'obsidian';
 import {animeToObsidianSettings, DEFAULT_SETTINGS, animeToObsidianSettingsTab} from './settings';
 
 
@@ -78,7 +78,6 @@ class animeText{
 		aditionaltags.tags.forEach(element => {
 			// voir si il y a un espace dans le tag et le remplacer par un underscore
 			element = spaceremover(element);
-			console.log(element);
 			tags += `  - ${element}\n`;
 		});
 		data.genres.forEach(element => {
@@ -106,7 +105,7 @@ export default class animeToObsidian extends Plugin {
         await this.loadSettings();
         this.addCommand({
             id: 'submit-anime',
-            name: 'add a page for an anime',
+            name: 'Create note for anime',
             callback: async () => {
                 // Afficher une boîte de dialogue pour entrer le titre
                 let modal = new TextPromptModal(this.app);
@@ -115,23 +114,24 @@ export default class animeToObsidian extends Plugin {
                 // Attendre que l'utilisateur ferme la modal et obtenir la valeur de la zone de texte
                 let value = await modal.getValue();
 
-                console.log(value);
 				if(value != ""){
 					// Créer un nouveau fichier Markdown avec le titre comme nom de fichier
                     let filePath = (this.settings as animeToObsidianSettings).basePath + "/" + value + '.md';
                     let file = await this.app.vault.create(filePath, '');
 
                     // Créer un nouvel onglet et ouvrir le fichier dans cet onglet
-                    let leaf = this.app.workspace.activeLeaf;
+                    let leaf = this.app.workspace.getLeaf();
                     await leaf.openFile(file);
 
                     // Obtenir l'éditeur du fichier actuellement ouvert
-                    let editor = leaf.view.sourceMode.cmEditor;
+                    if(leaf.view instanceof MarkdownView) {
+                        let editor = leaf.view.editor;
+                        // Remplacer le texte de l'éditeur
+                        let text = new animeText();
+                        editor.setValue(text.createText(await getAnimeData(value), value, aditionaltags));
+                    }
 
-                    // Remplacer le texte de l'éditeur
-                    let text = new animeText();
-                    console.log(text.createText(await getAnimeData(value), value, aditionaltags));
-                    editor.setValue(text.createText(await getAnimeData(value), value, aditionaltags));
+
 				} else {
 					new Notice("did you type nothing ? (error : variable is empty)");
 				}
@@ -182,7 +182,7 @@ async function getAnimeData(animeName: string) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
 
-        console.log(response.json.data);
+
         return response.json.data[0];
     } catch (error) {
         console.error(`Failed to fetch anime data: ${error.message}`);

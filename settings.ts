@@ -3,11 +3,13 @@ import animeToObsidian from './main';
 import {ls} from './filefinder'
 
 export interface animeToObsidianSettings {
-    basePath: string;
+  basePath: string;
+
 }
-  
+
 export const DEFAULT_SETTINGS: animeToObsidianSettings = {
-    basePath: ''
+  basePath: '',
+
 }
 
 
@@ -25,7 +27,7 @@ export class animeToObsidianSettingsTab extends PluginSettingTab {
       containerEl.empty();
   
 
-      const options = ls("folder");
+      const options = ls(this.app,"folder");
   
       new Setting(containerEl)
         .setName('Base Path')
@@ -43,5 +45,6 @@ export class animeToObsidianSettingsTab extends PluginSettingTab {
             await this.plugin.saveSettings();
           });
         });
+
     }
   };
