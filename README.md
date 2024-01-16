@@ -43,7 +43,7 @@ npm run dev
 ## Usage
 
 1. open the commad palette (ctrl + p or cmd + p)
-2. search for "add a page for an anime"
+2. search for Create note for anime
 3. enter the name of the anime
 4. click sumbit.
 and that's it.
