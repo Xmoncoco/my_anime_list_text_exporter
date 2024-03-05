@@ -1,7 +1,7 @@
 import { App, TAbstractFile, TFolder, TFile } from "obsidian";
 
 export function ls(app: App, asked: string, ): string[] {
-    let folder : TFolder = app.vault.getAbstractFileByPath("/") as TFolder;
+    let folder : TFolder = app.vault.getRoot() as TFolder;
     let listOfFiles: string[] = [];
 
     folder.children.forEach((file: TAbstractFile) => {
