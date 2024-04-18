@@ -25,12 +25,11 @@ npm install
 npm run dev
 ```
 ## Installation
-### From Obsidian comunity plugin page (Recommended) (not yet available)
+### From Obsidian comunity plugin page (Recommended)
 1. Open Obsidian
 2. Go to Settings > Third-party plugin
-3. Make sure Safe mode is **off**
-4. Click Browse community plugins
-5. Search for "My Anime List to Obsidian"
+3. Click Browse community plugins
+4. Search for "My Anime List text exporter"
 
 ### From GitHub code.
 1. Download the latest release from the [GitHub releases page]
