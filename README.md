@@ -13,7 +13,12 @@ This plugin creates a page in Obsidian from your anime list.
 - [x] add tags to each page with the data
 - [x] add a synosis to each page
 - [ ] add a link to the anime page
-- [ ] add character to the page
+- [ ] ~~add character to the page~~ (change because of another idéa)
+- [ ] add an character folder
+	- [ ] create a folder with the name of the anime
+ 	- [ ] create a page for the character
+  	- [ ] add link to the page
+  	- [ ] add a modal to select the character that will be added 
 - [ ] add a way to put animes in a check list 
 
 ## build
@@ -27,9 +32,10 @@ npm run dev
 ## Installation
 ### From Obsidian comunity plugin page (Recommended)
 1. Open Obsidian
-2. Go to Settings > Third-party plugin
-3. Click Browse community plugins
-4. Search for "My Anime List text exporter"
+2. try to copy and paste on your internet browser this link obsidian://show-plugin?id=my_anime_list_text_exporter
+3. Go to Settings > Third-party plugin
+4. Click Browse community plugins
+5. Search for "My Anime List text exporter"
 
 ### From GitHub code.
 1. Download the latest release from the [GitHub releases page]
