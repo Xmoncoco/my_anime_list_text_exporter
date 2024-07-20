@@ -11,6 +11,29 @@ import { Plugin, Modal, TFile, TFolder, Notice, requestUrl, RequestUrlParam, Mar
 import {animeToObsidianSettings, DEFAULT_SETTINGS, animeToObsidianSettingsTab} from './settings';
 
 
+const translations = {
+    en: {
+      addPageTitle: "Add a page for an anime",
+      submitButton: "Submit",
+      // Ajoutez d'autres traductions ici
+    },
+    fr: {
+      addPageTitle: "Ajouter une page pour un anime",
+      submitButton: "Soumettre",
+      // Ajoutez d'autres traductions ici
+    }
+  };
+
+  let currentlang = moment.locale();
+  if (currentlang !== 'en' && currentlang !== 'fr') {
+    currentlang = 'en';
+  }
+  // translation function 
+  function t(key) {
+    const translation = translations[currentlang][key] || translations['en'][key];
+    return translation || key;
+  }
+  
 //temporaire pour avoir une configuration de tag suplémentaire
 let aditionaltags = {
 	tags :["anime", "culture"],
@@ -26,15 +49,16 @@ class TextPromptModal extends Modal {
     }
 
     onOpen() {
+        
         let {contentEl} = this;
 		let title = contentEl.createEl('h2');
-		title.textContent = "add a page for an anime";
+		title.textContent = t('addPageTitle');
         let textInput = contentEl.createEl('input', {type: 'text'});
         textInput.addEventListener('input', () => { this.text = textInput.value; });
 
         // Créer un bouton
         let submitButton = contentEl.createEl('button');
-        submitButton.textContent = 'Submit';
+        submitButton.textContent = t('submitButton');
 
         // Ajouter un gestionnaire d'événements click au bouton
         submitButton.addEventListener('click', () => {
@@ -101,11 +125,10 @@ export default class animeToObsidian extends Plugin {
     settings: animeToObsidianSettings | unknown;
 
     async onload() {
-        
         await this.loadSettings();
         this.addCommand({
             id: 'submit-anime',
-            name: 'Create note for anime',
+            name: t('addPageTitle'),
             callback: async () => {
                 // Afficher une boîte de dialogue pour entrer le titre
                 let modal = new TextPromptModal(this.app);

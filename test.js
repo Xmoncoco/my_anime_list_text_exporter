@@ -15,7 +15,7 @@ getAnimeData('blue exorcist');
 */
 
 // test to create an dir finder
-
+/*
 const fs = require('fs');
 
 
@@ -59,3 +59,24 @@ async function ls(asked){
 };
 
 console.log[ls()];
+*/
+
+let test = {
+	"test": {
+		"test1": "poule",
+		"test2": "test2",
+		"test3": "test3"
+	},
+	"test2": {
+		"test1": "test1",
+		"test2": "test2",
+		"test3": "test3"
+	},
+	"test3": {
+		"test1": "test1",
+		"test2": "test2",
+		"test3": "test3"
+	}
+};
+
+console.log(test["test"]["test1"]);
