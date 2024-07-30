@@ -6,3 +6,38 @@ available in the app when your plugin is enabled.
 If your plugin does not need CSS, delete this file.
 
 */
+
+.history-item {
+   margin: 20px; /* Ajustez la valeur selon vos besoins */
+   
+}
+.delete-button{
+   float: right;
+}
+
+.mod-cta{
+  float: right;
+}
+.description, .avertissement {
+   padding: 1rem;
+   border-radius: 5px;
+ }
+ 
+ /* Description standard */
+ .description {
+   background-color: #f5f5f5;
+   border: 1px solid #ddd;
+ }
+ 
+ /* Description d'avertissement */
+ .avertissement {
+   background-color: #ffdddd;
+   border: 1px solid #ffaaaa;
+   color: #900;
+   font-weight: bold;
+ }
+
+ .anime-history-modal {
+   min-width: 80%;
+   min-height: 80%;
+ }

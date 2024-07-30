@@ -15,12 +15,22 @@ const translations = {
     en: {
       addPageTitle: "Add a page for an anime",
       submitButton: "Submit",
-      // Ajoutez d'autres traductions ici
+      animeHistory: "Anime History",
+      animeHistoryDescription1:"this page is for managing your anime list save (the one that can be use when building the checklist)",
+      animeHistoryDescription2: "warning : the cross doesn't delete the file but delete the anime name in your history",
+      createlist: "Create the list",
+      noListError: "you need to enable the list in the settings or create it with the command 'create-anime-list'"
+
     },
     fr: {
       addPageTitle: "Ajouter une page pour un anime",
       submitButton: "Soumettre",
-      // Ajoutez d'autres traductions ici
+      animeHistory: "Historique des animes",
+      animeHistoryDescription1:"cette page est pour gérer votre historique de liste d'anime (celui qui peut être utilisé lors de la construction de la liste)",
+      animeHistoryDescription2: "attention : la croix ne supprime pas le fichier mais supprime le nom de l'anime dans votre historique",
+      createlist: "Créer la liste",
+    noListError: "vous devez activer la liste dans les paramètres ou la créer avec la commande 'create-anime-list'"
+
     }
   };
 
@@ -38,7 +48,7 @@ const translations = {
 let aditionaltags = {
 	tags :["anime", "culture"],
 };
-
+ 
 // Créer une classe pour la modal
 class TextPromptModal extends Modal {
     text: string = '';
@@ -57,7 +67,7 @@ class TextPromptModal extends Modal {
         textInput.addEventListener('input', () => { this.text = textInput.value; });
 
         // Créer un bouton
-        let submitButton = contentEl.createEl('button');
+        let submitButton = contentEl.createEl('button', {cls: 'mod-cta'});
         submitButton.textContent = t('submitButton');
 
         // Ajouter un gestionnaire d'événements click au bouton
@@ -121,11 +131,101 @@ class animeText{
 	
 
 };
+
+class AnimeHistoryMoldal extends Modal {
+    plugin: Plugin;
+    constructor(app: App, plugin: Plugin) {
+        super(app);
+        this.modalEl.addClass('anime-history-modal');
+        this.plugin = plugin;
+    }
+
+    onOpen() {
+        let {contentEl} = this;
+
+        let title = contentEl.createEl('h2');
+        title.textContent = t('animeHistory');
+
+        let description = contentEl.createEl('p', {cls: 'description'});
+        description.textContent = t('animeHistoryDescription1');
+
+        description = contentEl.createEl('p', {cls: 'avertissement'});
+        description.textContent = t('animeHistoryDescription2');
+
+        let list = contentEl.createEl('ul');
+        let history = (this.plugin.settings as animeToObsidianSettings).anime_history || [];
+
+        history.forEach(item => {
+            let listItem = list.createEl('li', {cls: 'history-item'});
+            listItem.textContent = item + " ";
+            // Ajouter un bouton de suppression pour chaque élément de l'historique
+            let deleteButton = listItem.createEl('button', {cls: 'delete-button'});
+            deleteButton.textContent = 'X';
+            deleteButton.addEventListener('click', () => {
+                // Supprimer l'élément de l'historique
+                const index = history.indexOf(item);
+                if (index > -1) {
+                    history.splice(index, 1);
+                }
+                // Enregistrer les paramètres mis à jour
+                this.plugin.saveSettings();
+                // Mettre à jour l'affichage de la modal
+                contentEl.empty();
+                this.onOpen();
+            });
+        });
+    }
+
+    onClose() {
+        let {contentEl} = this;
+        contentEl.empty();
+    }
+}
+
 export default class animeToObsidian extends Plugin {
     settings: animeToObsidianSettings | unknown;
 
     async onload() {
         await this.loadSettings();
+
+        this.addCommand({
+            id: 'open-anime-history',
+            name: t('animeHistory'),
+            callback: async () => {
+                let modal = new AnimeHistoryMoldal(this.app, this);
+                modal.open();
+            },
+        });
+
+        this.addCommand({
+            id: 'create-anime-list',
+            name: t('createlist'),
+            callback: async () => {
+                if (!(this.settings as animeToObsidianSettings).list) {
+                    new Notice("you need to enable the list in the settings");
+                    return;
+                }
+
+                let filePath = (this.settings as animeToObsidianSettings).listPath + "/" + (this.settings as animeToObsidianSettings).listname + ".md";
+    
+                // Vérifier si le fichier existe déjà
+                if (await this.app.vault.adapter.exists(filePath)) {
+                    new Notice("File already exists. Deleting the existing file.");
+                    // Supprimer le fichier existant
+                    await this.app.vault.adapter.remove(filePath);
+                }
+
+                let history = (this.settings as animeToObsidianSettings).anime_history || [];
+                let text = "";
+                history.forEach(element => {
+                    text += `- [ ] [[${element}]]\n`;
+                });
+                let file = await this.app.vault.create((this.settings as animeToObsidianSettings).listPath + "/"+ (this.settings as animeToObsidianSettings).listname + ".md", text);
+                let leaf = this.app.workspace.getLeaf();
+                await leaf.openFile(file);
+            },
+        });
+
         this.addCommand({
             id: 'submit-anime',
             name: t('addPageTitle'),
@@ -137,7 +237,23 @@ export default class animeToObsidian extends Plugin {
                 // Attendre que l'utilisateur ferme la modal et obtenir la valeur de la zone de texte
                 let value = await modal.getValue();
 
+
 				if(value != ""){
+                    const history = (this.settings as animeToObsidianSettings).anime_history || [];
+                    history.push(value);
+                    (this.settings as animeToObsidianSettings).anime_history = history;
+
+                    // Enregistrer les paramètres mis à jour
+                    await this.saveSettings();
+                    
+                    if((this.settings as animeToObsidianSettings).list && await this.app.vault.adapter.exists((this.settings as animeToObsidianSettings).listPath + "/" + (this.settings as animeToObsidianSettings).listname + ".md")){
+                        let file = await this.app.vault.getAbstractFileByPath((this.settings as animeToObsidianSettings).listPath + "/" + (this.settings as animeToObsidianSettings).listname + ".md");
+                        let content = await this.app.vault.read(file);
+                        content += `- [ ] [[${value}]]\n`;
+                        await this.app.vault.modify(file, content);
+                    }else{
+                        new Notice(t('noListError'));
+                    }
 					// Créer un nouveau fichier Markdown avec le titre comme nom de fichier
                     let filePath = (this.settings as animeToObsidianSettings).basePath + "/" + value + '.md';
                     let file = await this.app.vault.create(filePath, '');

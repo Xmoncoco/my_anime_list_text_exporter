@@ -13,6 +13,7 @@ const translations = {
     checklistPathDesc: 'The path where you want to checklist your anime',
     selectBasePath: 'Select a base path',
     selectListPath: 'Select a list path',
+    listname : 'anime list'
   },
   fr: {
     basePath: 'Chemin de base',
@@ -23,6 +24,7 @@ const translations = {
     checklistPathDesc: 'Le chemin où vous voulez lister vos animes',
     selectBasePath: 'Sélectionnez un chemin de base',
     selectListPath: 'Sélectionnez un chemin de liste',
+    listname : 'liste d\'anime'
   }
 };
 
@@ -40,6 +42,8 @@ export interface animeToObsidianSettings {
   basePath: string;
   list : boolean;
   listPath: string;
+  animes_history : Array<string>;
+  listname : string;
 
 }
 
@@ -47,6 +51,9 @@ export const DEFAULT_SETTINGS: animeToObsidianSettings = {
   basePath: '',
   list: false,
   listPath: '',
+  animes_history: [],
+  listname: t('listname')
+   
 
 }
 
@@ -81,7 +88,7 @@ export class animeToObsidianSettingsTab extends PluginSettingTab {
             await this.plugin.saveSettings();
           });
         });
-      /*
+      
         new Setting(containerEl)
           .setName(t('checklist'))
           .setDesc(t('checklistDesc'))
@@ -92,6 +99,7 @@ export class animeToObsidianSettingsTab extends PluginSettingTab {
               await this.plugin.saveSettings();
             });
           });
+        
         
         new Setting(containerEl)
           .setName(t('checklistPath'))
@@ -107,6 +115,19 @@ export class animeToObsidianSettingsTab extends PluginSettingTab {
               await this.plugin.saveSettings();
             });
           });
-      */
+
+        new Setting(containerEl)
+          .setName(t('listname'))
+          .setDesc(t('listname'))
+          .addText(text => text
+            .setPlaceholder(t('listname'))
+            .setValue(this.plugin.settings.listname)
+            .onChange(async (value) => {
+              this.plugin.settings.listname = value;
+              await this.plugin.saveSettings();
+            }));
+         
+          
+
     }
   }
