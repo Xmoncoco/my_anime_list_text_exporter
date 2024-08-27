@@ -30,7 +30,7 @@ npm install
 npm run dev
 ```
 ## Installation
-### From Obsidian comunity plugin page (Recommended)
+### From Obsidian community plugin page (Recommended)
 1. Open Obsidian
 2. try to copy and paste on your internet browser this [link](obsidian://show-plugin?id=my_anime_list_text_exporter)
 3. Go to Settings > Third-party plugin
