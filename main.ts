@@ -269,7 +269,6 @@ export default class animeToObsidian extends Plugin {
                         // Remplacer le texte de l'éditeur
                         let text = new animeText();
                         let data = await getAnimeData(value)
-                        console.log(data)
                         editor.setValue(text.createText(data, value, aditionaltags,data.images.jpg.image_url));
                     }
 
