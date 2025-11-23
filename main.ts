@@ -29,7 +29,7 @@ const translations = {
       animeHistoryDescription1:"cette page est pour gérer votre historique de liste d'anime (celui qui peut être utilisé lors de la construction de la liste)",
       animeHistoryDescription2: "attention : la croix ne supprime pas le fichier mais supprime le nom de l'anime dans votre historique",
       createlist: "Créer la liste",
-    noListError: "vous devez activer la liste dans les paramètres ou la créer avec la commande 'create-anime-list'"
+      noListError: "vous devez activer la liste dans les paramètres ou la créer avec la commande 'create-anime-list'"
 
     }
   };
@@ -98,16 +98,17 @@ class animeText{
 
 	}
 
-	createText(animeData: JSON, animeName: string, aditionaltags: JSON){
+	createText(animeData: JSON, animeName: string, aditionaltags: JSON, imageURL: string){
 		let text = "";
-		text += "---\n" + this.createTags(animeData,animeName, aditionaltags)+ "---\n";
+		text += "---\n" + this.createTags(animeData,animeName, aditionaltags,imageURL)+ "---\n";
         text += `# description: \n ${animeData.synopsis}\n`;
 
 		return text;
 	}
 
-	createTags(data : JSON ,animeName: string, aditionaltags: JSON){
-		let tags ="tags:\n";
+	createTags(data : JSON ,animeName: string, aditionaltags: JSON, imageURL : string){
+		let fulltags = `image: ${imageURL}`
+        let tags ="tags:\n";
 		tags += `  - ${spaceremover(animeName)}\n`;
 		aditionaltags.tags.forEach(element => {
 			// voir si il y a un espace dans le tag et le remplacer par un underscore
@@ -267,7 +268,9 @@ export default class animeToObsidian extends Plugin {
                         let editor = leaf.view.editor;
                         // Remplacer le texte de l'éditeur
                         let text = new animeText();
-                        editor.setValue(text.createText(await getAnimeData(value), value, aditionaltags));
+                        let data = await getAnimeData(value)
+                        console.log(data)
+                        editor.setValue(text.createText(data, value, aditionaltags,data.images.jpg.image_url));
                     }
 
 
