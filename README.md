@@ -5,21 +5,21 @@ This plugin creates a page in Obsidian from your anime list.
 
 - [x] have a link to jikan
 - [x] create a page for each anime
-- [ ] add settings to the plugin
+- [x] add settings to the plugin
     - [x] add a path to the anime list
-    - [ ] chose tags to add
-    - [ ] create a custom template
-    - [ ] check list setting 
+    - [x] chose tags to add
+    - [x] create a custom template
+    - [x] check list setting
 - [x] add tags to each page with the data
 - [x] add a synosis to each page
-- [ ] add a link to the anime page
-- [ ] ~~add character to the page~~ (change because of another idéa)
-- [ ] add an character folder
-	- [ ] create a folder with the name of the anime
- 	- [ ] create a page for the character
-  	- [ ] add link to the page
-  	- [ ] add a modal to select the character that will be added 
-- [ ] add a way to put animes in a check list 
+- [x] add a link to the anime page
+- [x] ~~add character to the page~~ (change because of another idéa)
+- [x] add an character folder
+	- [x] create a folder with the name of the anime
+ 	- [x] create a page for the character
+  	- [x] add link to the page
+  	- [x] add a modal to select the character that will be added 
+- [x] add a way to put animes in a check list 
 
 ## build
 
