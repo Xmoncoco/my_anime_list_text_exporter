@@ -399,7 +399,7 @@ export default class animeToObsidian extends Plugin {
                 }
 
                 // Create .bases file
-                const basesFile = `${animeFolder}/${animeName}.base`;
+                const basesFile = `${animeFolder}/../${animeName}.base`;
                 const basesContent = `views:
   - type: cards
     name: Table
