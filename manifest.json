@@ -1,7 +1,7 @@
 {
 	"id": "my_anime_list_text_exporter",
 	"name": "my anime list text exporter",
-	"version": "1.4.0",
+	"version": "1.4.1",
 	"minAppVersion": "0.15.0",
 	"description": "add anime data for your notes",
 	"author": "XmoncocoX",
